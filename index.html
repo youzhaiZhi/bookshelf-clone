@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="20260907-6">
+<meta name="version" content="20260907-7">
 <style>
   :root{
     --bg-app:#f4f4ee;
@@ -37,16 +37,21 @@
   /* ===== 顶部双标签：点谁谁大 ===== */
   .topbar{
     flex:none;display:flex;align-items:center;justify-content:space-between;
-    height:54px;padding:4px 18px 0;
+    height:52px;margin:8px 6% 0;padding:0 10px 0 20px;
+    background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.4);
+    -webkit-backdrop-filter:blur(24px) saturate(1.4);
+    border:1px solid rgba(255,255,255,.85);
+    border-radius:999px;
+    box-shadow:0 8px 28px rgba(0,0,0,.10);
   }
   .top-tabs{display:flex;align-items:baseline;gap:14px}
   .search-fab{
-    width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;flex:none;
+    width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;flex:none;
     background:rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center;
     transition:background .2s;
   }
-  .search-fab.open{background:#dfeadb}
-  .search-fab svg{width:16px;height:16px;stroke:#666;fill:none;stroke-width:2}
+  .search-fab.open{background:rgba(47,168,79,.15)}
+  .search-fab svg{width:13px;height:13px;stroke:#555;fill:none;stroke-width:2}
   .search-wrap{max-height:0;opacity:0;overflow:hidden;transition:max-height .25s ease,opacity .2s}
   .search-wrap.open{max-height:70px;opacity:1}
   .top-tabs button{
