@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="20260907-3">
+<meta name="version" content="20260907-4">
 <style>
   :root{
     --bg-app:#f4f4ee;
@@ -34,25 +34,26 @@
   }
   .app-status .r{display:flex;gap:6px;align-items:center;font-size:12px}
   .app-status .batt{border:1px solid var(--ink);border-radius:3px;padding:0 3px;font-size:10px}
-  /* ===== 顶部导航 ===== */
-  .topbar{
-    flex:none;height:44px;display:grid;grid-template-columns:52px 1fr 52px;align-items:center;
-    padding:0 10px;
+  /* ===== 顶部双标签：点谁谁大 ===== */
+  .top-tabs{
+    flex:none;display:flex;align-items:baseline;justify-content:center;gap:18px;
+    height:56px;padding-top:4px;
   }
-  .title-pick{
-    grid-column:2;justify-self:center;display:flex;align-items:center;gap:5px;
-    font-size:16px;font-weight:600;cursor:pointer;
+  .top-tabs button{
+    border:none;background:transparent;cursor:pointer;color:var(--muted);
+    font-family:inherit;font-size:15px;font-weight:500;
+    transition:font-size .22s ease,color .22s ease,font-weight .22s;
   }
-  .title-pick svg{width:10px;height:10px;fill:var(--muted)}
-  .more{
-    grid-column:3;justify-self:end;width:36px;height:36px;border-radius:50%;
-    background:rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center;
-    font-size:17px;color:#666;cursor:pointer;letter-spacing:1px;
+  .top-tabs button.active{
+    font-size:22px;font-weight:800;color:var(--ink);letter-spacing:1px;
   }
   /* ===== 内容区 ===== */
   .content{flex:1;overflow-y:auto;padding:0 max(24px,4vw) 130px;scrollbar-width:none}
   .content::-webkit-scrollbar{display:none}
   .inner{max-width:720px;margin:0 auto;width:100%}
+  .pane{display:none;animation:fadein .25s ease}
+  .pane.show{display:block}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   h1{font-size:clamp(28px,6vw,36px);font-weight:800;margin:8px 0 18px;letter-spacing:1px}
   .search{
     display:flex;align-items:center;gap:8px;background:#fff;border-radius:12px;
@@ -85,9 +86,31 @@
   .stars svg{width:13px;height:13px;fill:#cfcfc6}
   .sub{font-size:12px;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .right{font-size:12px;color:var(--muted);white-space:nowrap;text-align:right;padding-top:2px}
-  /* ===== 底部 Dock（参考图实测：厚胶囊，高≈宽×0.29）===== */
+  /* ===== 书城封面墙 ===== */
+  .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:18px 14px}
+  .wall .cell{text-align:center;cursor:pointer}
+  .wall .cover{
+    width:100%;aspect-ratio:3/4;border-radius:6px;margin-bottom:8px;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    box-shadow:1px 3px 8px rgba(0,0,0,.25);
+  }
+  .wall .t{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .wall .a{font-size:11px;color:var(--muted);margin-top:2px}
+  .cv1{background:linear-gradient(160deg,#c0392b,#8e1e14);color:#f5e9c8;
+       font-family:"STKaiti","KaiTi",serif;writing-mode:vertical-rl;font-size:15px;letter-spacing:4px}
+  .cv2{background:#fdfdf8;flex-direction:column;color:#222;text-align:center}
+  .cv2 .b{font-weight:800;font-size:14px;font-family:Georgia,serif}
+  .cv2 .e{font-size:8px;color:#555;margin-top:4px;font-style:italic;font-family:Georgia,serif;line-height:1.4}
+  .cv3{background:#111;flex-direction:column;gap:4px}
+  .cv3 .en{color:#e74c3c;font-weight:800;font-size:11px;font-family:Georgia,serif}
+  .cv3 .zh{color:#fff;font-size:17px;font-weight:700}
+  .cv4{background:#0d0d0f;flex-direction:column;gap:5px}
+  .cv4 .en{color:#8a8f98;font-size:8px;letter-spacing:1px;font-family:Georgia,serif}
+  .cv4 .zh{color:#fff;font-size:15px;font-weight:700}
+  .sec-title{font-size:17px;font-weight:700;margin:4px 0 14px}
+  /* ===== 底部 Dock ===== */
   .dock{
-    position:fixed;bottom:18px;left:8px;right:8px;
+    position:fixed;bottom:18px;left:5%;right:5%;
     height:62px;
     background:rgba(255,255,255,.88);backdrop-filter:blur(16px);
     border-radius:999px;padding:0 14px;
@@ -110,72 +133,113 @@
     <div class="r"><span>5G</span><span>▮▮▮</span><span class="batt">74</span></div>
   </div>
 
-  <div class="topbar">
-    <div></div>
-    <div class="title-pick">全部
-      <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
-    </div>
-    <div class="more">…</div>
+  <!-- 顶部双标签 -->
+  <div class="top-tabs">
+    <button data-pane="shelf" class="active">书架</button>
+    <button data-pane="store">书城</button>
   </div>
 
   <div class="content">
     <div class="inner">
-      <h1>书架</h1>
 
-      <div class="search">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        搜索
-      </div>
+      <!-- ===== 书架页 ===== -->
+      <div class="pane show" id="pane-shelf">
+        <h1>书架</h1>
 
-      <div class="book-item">
-        <div class="mini m1"></div>
-        <div class="meta">
-          <div class="name">天幕红尘 <small>(豆豆)</small></div>
-          <div class="stars" data-stars></div>
-          <div class="sub"><span>814.7 KB</span><span>2026-04-22 08:15</span></div>
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          搜索
         </div>
-        <div class="right">阅读至 0.1%</div>
+
+        <div class="book-item">
+          <div class="mini m1"></div>
+          <div class="meta">
+            <div class="name">天幕红尘 <small>(豆豆)</small></div>
+            <div class="stars" data-stars></div>
+            <div class="sub"><span>814.7 KB</span><span>2026-04-22 08:15</span></div>
+          </div>
+          <div class="right">阅读至 0.1%</div>
+        </div>
+
+        <div class="book-item">
+          <div class="mini m2"></div>
+          <div class="meta">
+            <div class="name">悉达多 <small>(赫尔曼·黑塞) (Z-Library)</small></div>
+            <div class="stars" data-stars></div>
+            <div class="sub"><span>186.3 KB</span><span>2026-04-19 21:57</span></div>
+          </div>
+          <div class="right">阅读至 4.5%</div>
+        </div>
+
+        <div class="book-item">
+          <div class="mini m3"></div>
+          <div class="meta">
+            <div class="name">欢迎进入梦魇直播间</div>
+            <div class="stars" data-stars></div>
+            <div class="sub"><span>1.2 MB</span><span>2026-04-12 20:03</span></div>
+          </div>
+          <div class="right">阅读至 12.3%</div>
+        </div>
+
+        <div class="book-item">
+          <div class="mini m4"><span>PRINCIPLES</span></div>
+          <div class="meta">
+            <div class="name">原则 <small>(瑞·达利欧)</small></div>
+            <div class="stars" data-stars></div>
+            <div class="sub"><span>上次打开: 5月19日 09:35</span></div>
+          </div>
+          <div class="right">1.6%</div>
+        </div>
+
+        <div class="book-item">
+          <div class="mini m5">唐诗三百首</div>
+          <div class="meta">
+            <div class="name">唐诗三百首 <small>(蘅塘退士)</small></div>
+            <div class="stars" data-stars></div>
+            <div class="sub"><span>623.1 KB</span><span>2026-03-30 19:41</span></div>
+          </div>
+          <div class="right">阅读至 33.8%</div>
+        </div>
       </div>
 
-      <div class="book-item">
-        <div class="mini m2"></div>
-        <div class="meta">
-          <div class="name">悉达多 <small>(赫尔曼·黑塞) (Z-Library)</small></div>
-          <div class="stars" data-stars></div>
-          <div class="sub"><span>186.3 KB</span><span>2026-04-19 21:57</span></div>
+      <!-- ===== 书城页 ===== -->
+      <div class="pane" id="pane-store">
+        <h1>书城</h1>
+
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          搜索书名 / 作者
         </div>
-        <div class="right">阅读至 4.5%</div>
+
+        <div class="sec-title">推荐</div>
+        <div class="wall">
+          <div class="cell">
+            <div class="cover cv1">天幕红尘</div>
+            <div class="t">天幕红尘</div><div class="a">豆豆</div>
+          </div>
+          <div class="cell">
+            <div class="cover cv2"><div class="b">人类简史</div><div class="e">Sapiens<br>A Brief History of Humankind</div></div>
+            <div class="t">人类简史</div><div class="a">尤瓦尔·赫拉利</div>
+          </div>
+          <div class="cell">
+            <div class="cover cv3"><div class="en">PRINCIPLES</div><div class="zh">原则</div></div>
+            <div class="t">原则</div><div class="a">瑞·达利欧</div>
+          </div>
+          <div class="cell">
+            <div class="cover cv4"><div class="en">FUTURE POLITICS</div><div class="zh">算法的力量</div></div>
+            <div class="t">算法的力量</div><div class="a">亚历山大·R·格尔</div>
+          </div>
+          <div class="cell">
+            <div class="cover cv1">唐诗三百首</div>
+            <div class="t">唐诗三百首</div><div class="a">蘅塘退士</div>
+          </div>
+          <div class="cell">
+            <div class="cover m2"></div>
+            <div class="t">悉达多</div><div class="a">赫尔曼·黑塞</div>
+          </div>
+        </div>
       </div>
 
-      <div class="book-item">
-        <div class="mini m3"></div>
-        <div class="meta">
-          <div class="name">欢迎进入梦魇直播间</div>
-          <div class="stars" data-stars></div>
-          <div class="sub"><span>1.2 MB</span><span>2026-04-12 20:03</span></div>
-        </div>
-        <div class="right">阅读至 12.3%</div>
-      </div>
-
-      <div class="book-item">
-        <div class="mini m4"><span>PRINCIPLES</span></div>
-        <div class="meta">
-          <div class="name">原则 <small>(瑞·达利欧)</small></div>
-          <div class="stars" data-stars></div>
-          <div class="sub"><span>上次打开: 5月19日 09:35</span></div>
-        </div>
-        <div class="right">1.6%</div>
-      </div>
-
-      <div class="book-item">
-        <div class="mini m5">唐诗三百首</div>
-        <div class="meta">
-          <div class="name">唐诗三百首 <small>(蘅塘退士)</small></div>
-          <div class="stars" data-stars></div>
-          <div class="sub"><span>623.1 KB</span><span>2026-03-30 19:41</span></div>
-        </div>
-        <div class="right">阅读至 33.8%</div>
-      </div>
     </div>
   </div>
 </section>
@@ -191,6 +255,18 @@
   const star='<svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>';
   document.querySelectorAll('[data-stars]').forEach(el=>el.innerHTML=star.repeat(5));
 
+  // 顶部双标签：点谁谁大，切页面
+  document.querySelectorAll('.top-tabs button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelector('.top-tabs .active')?.classList.remove('active');
+      btn.classList.add('active');
+      document.querySelectorAll('.pane').forEach(p=>p.classList.remove('show'));
+      document.getElementById('pane-'+btn.dataset.pane).classList.add('show');
+      document.querySelector('.content').scrollTop=0;
+    });
+  });
+
+  // Dock 高亮切换
   document.querySelectorAll('.dock .tab').forEach(t=>{
     t.addEventListener('click',()=>{
       document.querySelector('.dock .active')?.classList.remove('active');
