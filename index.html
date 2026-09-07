@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="20260907-5">
+<meta name="version" content="20260907-6">
 <style>
   :root{
     --bg-app:#f4f4ee;
@@ -118,21 +118,29 @@
   .cv4 .en{color:#8a8f98;font-size:8px;letter-spacing:1px;font-family:Georgia,serif}
   .cv4 .zh{color:#fff;font-size:15px;font-weight:700}
   .sec-title{font-size:17px;font-weight:700;margin:4px 0 14px}
-  /* ===== 底部 Dock ===== */
+  /* ===== 底部 Dock（毛玻璃胶囊，上图标下文字，绿色选中）===== */
   .dock{
-    position:fixed;bottom:18px;left:5%;right:5%;
-    height:62px;
-    background:rgba(255,255,255,.88);backdrop-filter:blur(16px);
-    border-radius:999px;padding:0 14px;
+    position:fixed;bottom:22px;left:6%;right:6%;
+    height:66px;
+    background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.4);
+    -webkit-backdrop-filter:blur(24px) saturate(1.4);
+    border:1px solid rgba(255,255,255,.85);
+    border-radius:999px;padding:0 12px;
     display:flex;justify-content:space-evenly;align-items:center;
-    box-shadow:0 10px 32px rgba(0,0,0,.14);z-index:50;
+    box-shadow:0 8px 28px rgba(0,0,0,.10);z-index:50;
   }
   .dock .tab{
-    width:64px;height:46px;border-radius:999px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:28px;cursor:pointer;border:none;background:transparent;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    min-width:72px;height:50px;border-radius:999px;
+    border:none;background:transparent;cursor:pointer;
+    color:#1a1a1a;font-family:inherit;
+    transition:color .2s;
   }
-  .dock .tab.active{background:#dfeadb;box-shadow:inset 0 0 0 1px #cfdccb}
+  .dock .tab svg{width:22px;height:22px;fill:currentColor}
+  .dock .tab span{font-size:11px;font-weight:500;line-height:1}
+  .dock .tab.active{
+    color:#2fa84f;background:rgba(0,0,0,.06);
+  }
 </style>
 </head>
 <body>
@@ -255,10 +263,18 @@
 </section>
 
 <nav class="dock">
-  <button class="tab active" title="书架">🌴</button>
-  <button class="tab" title="发现">⭐</button>
-  <button class="tab" title="分组">🐚</button>
-  <button class="tab" title="我的">🍯</button>
+  <button class="tab active">
+    <svg viewBox="0 0 24 24"><path d="M12 3l9 8h-2.5v9h-5v-6h-3v6h-5v-9H3z"/></svg><span>首页</span>
+  </button>
+  <button class="tab">
+    <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm4.2 5.8l-2.5 5.7-5.7 2.5 2.5-5.7z"/></svg><span>发现</span>
+  </button>
+  <button class="tab">
+    <svg viewBox="0 0 24 24"><path d="M4 20V9h4v11H4zm6 0V4h4v16h-4zm6 0v-8h4v8h-4z"/></svg><span>统计</span>
+  </button>
+  <button class="tab">
+    <svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-4.4 0-8 2.5-8 5.5V22h16v-2.5c0-3-3.6-5.5-8-5.5z"/></svg><span>我的</span>
+  </button>
 </nav>
 
 <script>
