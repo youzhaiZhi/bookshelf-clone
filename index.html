@@ -10,7 +10,6 @@
     --ink:#1c1c1a;
     --muted:#9a9a92;
     --line:#e7e7df;
-    --dock-bg:rgba(252,252,248,.92);
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
@@ -20,15 +19,8 @@
     color:var(--ink);
     overflow:hidden;
   }
-  /* ===== 横向翻页（全屏）===== */
-  .pager{
-    height:100dvh;overflow-x:auto;overflow-y:hidden;
-    scroll-snap-type:x mandatory;display:flex;scrollbar-width:none;
-  }
-  .pager::-webkit-scrollbar{display:none}
   .shelf-card{
-    flex:0 0 100%;scroll-snap-align:center;
-    height:100%;display:flex;flex-direction:column;overflow:hidden;
+    height:100dvh;display:flex;flex-direction:column;overflow:hidden;
     background:var(--bg-app);
   }
   /* ===== 状态栏 ===== */
@@ -54,39 +46,16 @@
     font-size:17px;color:#666;cursor:pointer;letter-spacing:1px;
   }
   /* ===== 内容区 ===== */
-  .content{flex:1;overflow-y:auto;padding:0 max(24px,4vw) 130px;scrollbar-width:none}
+  .content{flex:1;overflow-y:auto;padding:0 max(24px,4vw) 170px;scrollbar-width:none}
   .content::-webkit-scrollbar{display:none}
+  .inner{max-width:720px;margin:0 auto;width:100%}
   h1{font-size:clamp(28px,6vw,36px);font-weight:800;margin:8px 0 18px;letter-spacing:1px}
   .search{
     display:flex;align-items:center;gap:8px;background:#fff;border-radius:12px;
     padding:12px 16px;color:var(--muted);font-size:15px;margin-bottom:24px;
-    box-shadow:0 1px 3px rgba(0,0,0,.04);max-width:720px;
+    box-shadow:0 1px 3px rgba(0,0,0,.04);
   }
   .search svg{width:16px;height:16px;stroke:var(--muted);flex:none}
-  .inner{max-width:720px;margin:0 auto;width:100%}
-  /* ===== 拟物书架 ===== */
-  .book-shelf{
-    display:flex;justify-content:space-between;align-items:flex-end;
-    padding:0 2px 16px;margin-bottom:8px;
-    border-bottom:3px solid #deded4;
-  }
-  .cover{
-    border-radius:4px;box-shadow:1px 2px 6px rgba(0,0,0,.25);
-    display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none;
-  }
-  .c1,.c5{width:56px;height:84px;background:linear-gradient(160deg,#c0392b,#8e1e14);
-    color:#f5e9c8;font-family:"STKaiti","KaiTi",serif;writing-mode:vertical-rl;
-    font-size:15px;letter-spacing:4px;justify-content:flex-start;padding-top:12px}
-  .c2{width:60px;height:88px;background:#fdfdf8;flex-direction:column;text-align:center;color:#222}
-  .c2 .t{font-weight:800;font-size:13px;font-family:Georgia,serif}
-  .c2 .e{font-size:7px;color:#555;margin-top:3px;font-family:Georgia,serif;font-style:italic;line-height:1.3}
-  .c3{width:58px;height:86px;background:#111;flex-direction:column;gap:2px}
-  .c3 .en{color:#e74c3c;font-weight:800;font-size:9px;letter-spacing:.5px;font-family:Georgia,serif}
-  .c3 .zh{color:#fff;font-size:14px;font-weight:700}
-  .c3 .au{color:#bbb;font-size:5.5px;letter-spacing:.4px;margin-top:2px}
-  .c4{width:54px;height:82px;background:#0d0d0f;flex-direction:column;gap:3px}
-  .c4 .en{color:#8a8f98;font-size:6.5px;letter-spacing:.6px;font-family:Georgia,serif}
-  .c4 .zh{color:#fff;font-size:12.5px;font-weight:700}
   /* ===== 书籍列表 ===== */
   .book-item{
     display:flex;gap:14px;padding:14px 2px;align-items:flex-start;cursor:pointer;
@@ -102,6 +71,9 @@
   .m3{background:linear-gradient(200deg,#4a1512,#1c0705 70%),radial-gradient(circle at 50% 30%,#8c2f22,transparent 60%)}
   .m4{background:#111;display:flex;align-items:center;justify-content:center}
   .m4 span{color:#e74c3c;font-size:8px;font-weight:800;font-family:Georgia,serif;letter-spacing:.5px}
+  .m5{background:linear-gradient(160deg,#c0392b,#8e1e14);color:#f5e9c8;
+      font-family:"STKaiti","KaiTi",serif;writing-mode:vertical-rl;display:flex;
+      align-items:center;justify-content:center;font-size:12px;letter-spacing:3px}
   .meta{flex:1;min-width:0}
   .meta .name{font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .meta .name small{color:#8b8b83;font-weight:400;font-size:12px}
@@ -109,137 +81,100 @@
   .stars svg{width:13px;height:13px;fill:#cfcfc6}
   .sub{font-size:12px;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .right{font-size:12px;color:var(--muted);white-space:nowrap;text-align:right;padding-top:2px}
-  /* ===== 底部 Dock（胶囊悬浮条，宽约85%，两端留白9%）===== */
+  /* ===== 底部 Dock（参考图实测：厚胶囊，高≈宽×0.29）===== */
   .dock{
-    position:fixed;bottom:20px;left:9%;right:9%;
-    height:62px;
-    background:rgba(255,255,255,.86);backdrop-filter:blur(16px);
-    border-radius:999px;padding:0 10px;
+    position:fixed;bottom:22px;left:9%;right:9%;
+    height:96px;
+    background:rgba(255,255,255,.88);backdrop-filter:blur(16px);
+    border-radius:999px;padding:0 12px;
     display:flex;justify-content:space-evenly;align-items:center;
-    box-shadow:0 8px 28px rgba(0,0,0,.12);z-index:50;
+    box-shadow:0 10px 32px rgba(0,0,0,.14);z-index:50;
   }
   .dock .tab{
-    width:64px;height:44px;border-radius:999px;
+    width:78px;height:68px;border-radius:999px;
     display:flex;align-items:center;justify-content:center;
-    font-size:25px;cursor:pointer;border:none;background:transparent;
+    font-size:36px;cursor:pointer;border:none;background:transparent;
   }
   .dock .tab.active{background:#dfeadb;box-shadow:inset 0 0 0 1px #cfdccb}
 </style>
 </head>
 <body>
 
-<div class="pager" id="pager">
+<section class="shelf-card">
+  <div class="app-status">
+    <div>09:36</div>
+    <div class="r"><span>5G</span><span>▮▮▮</span><span class="batt">74</span></div>
+  </div>
 
-  <!-- ===== 第一屏：全部 ===== -->
-  <section class="shelf-card">
-    <div class="app-status">
-      <div>09:36</div>
-      <div class="r"><span>5G</span><span>▮▮▮</span><span class="batt">74</span></div>
+  <div class="topbar">
+    <div></div>
+    <div class="title-pick">全部
+      <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
     </div>
+    <div class="more">…</div>
+  </div>
 
-    <div class="topbar">
-      <div></div>
-      <div class="title-pick">全部
-        <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+  <div class="content">
+    <div class="inner">
+      <h1>书架</h1>
+
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        搜索
       </div>
-      <div class="more">…</div>
-    </div>
 
-    <div class="content">
-      <div class="inner">
-        <h1>书架</h1>
-
-        <div class="search">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          搜索
+      <div class="book-item">
+        <div class="mini m1"></div>
+        <div class="meta">
+          <div class="name">天幕红尘 <small>(豆豆)</small></div>
+          <div class="stars" data-stars></div>
+          <div class="sub"><span>814.7 KB</span><span>2026-04-22 08:15</span></div>
         </div>
+        <div class="right">阅读至 0.1%</div>
+      </div>
 
-        <div class="book-item">
-          <div class="mini m1"></div>
-          <div class="meta">
-            <div class="name">天幕红尘 <small>(豆豆)</small></div>
-            <div class="stars" data-stars></div>
-            <div class="sub"><span>814.7 KB</span><span>2026-04-22 08:15</span></div>
-          </div>
-          <div class="right">阅读至 0.1%</div>
+      <div class="book-item">
+        <div class="mini m2"></div>
+        <div class="meta">
+          <div class="name">悉达多 <small>(赫尔曼·黑塞) (Z-Library)</small></div>
+          <div class="stars" data-stars></div>
+          <div class="sub"><span>186.3 KB</span><span>2026-04-19 21:57</span></div>
         </div>
+        <div class="right">阅读至 4.5%</div>
+      </div>
 
-        <div class="book-item">
-          <div class="mini m2"></div>
-          <div class="meta">
-            <div class="name">悉达多 <small>(赫尔曼·黑塞) (Z-Library)</small></div>
-            <div class="stars" data-stars></div>
-            <div class="sub"><span>186.3 KB</span><span>2026-04-19 21:57</span></div>
-          </div>
-          <div class="right">阅读至 4.5%</div>
+      <div class="book-item">
+        <div class="mini m3"></div>
+        <div class="meta">
+          <div class="name">欢迎进入梦魇直播间</div>
+          <div class="stars" data-stars></div>
+          <div class="sub"><span>1.2 MB</span><span>2026-04-12 20:03</span></div>
         </div>
+        <div class="right">阅读至 12.3%</div>
+      </div>
 
-        <div class="book-item">
-          <div class="mini m3"></div>
-          <div class="meta">
-            <div class="name">欢迎进入梦魇直播间</div>
-            <div class="stars" data-stars></div>
-            <div class="sub"><span>1.2 MB</span><span>2026-04-12 20:03</span></div>
-          </div>
-          <div class="right">阅读至 12.3%</div>
+      <div class="book-item">
+        <div class="mini m4"><span>PRINCIPLES</span></div>
+        <div class="meta">
+          <div class="name">原则 <small>(瑞·达利欧)</small></div>
+          <div class="stars" data-stars></div>
+          <div class="sub"><span>上次打开: 5月19日 09:35</span></div>
         </div>
+        <div class="right">1.6%</div>
+      </div>
 
-        <div class="book-item">
-          <div class="mini m4"><span>PRINCIPLES</span></div>
-          <div class="meta">
-            <div class="name">原则 <small>(瑞·达利欧)</small></div>
-            <div class="stars" data-stars></div>
-            <div class="sub"><span>上次打开: 5月19日 09:35</span></div>
-          </div>
-          <div class="right">1.6%</div>
+      <div class="book-item">
+        <div class="mini m5">唐诗三百首</div>
+        <div class="meta">
+          <div class="name">唐诗三百首 <small>(蘅塘退士)</small></div>
+          <div class="stars" data-stars></div>
+          <div class="sub"><span>623.1 KB</span><span>2026-03-30 19:41</span></div>
         </div>
-
-        <div class="book-item">
-          <div class="mini c5" style="width:52px;height:72px;font-size:12px;letter-spacing:3px;padding-top:8px">唐诗三百首</div>
-          <div class="meta">
-            <div class="name">唐诗三百首 <small>(蘅塘退士)</small></div>
-            <div class="stars" data-stars></div>
-            <div class="sub"><span>623.1 KB</span><span>2026-03-30 19:41</span></div>
-          </div>
-          <div class="right">阅读至 33.8%</div>
-        </div>
+        <div class="right">阅读至 33.8%</div>
       </div>
     </div>
-  </section>
-
-  <!-- ===== 第二屏：导入 ===== -->
-  <section class="shelf-card">
-    <div class="app-status">
-      <div>09:36</div>
-      <div class="r"><span>5G</span><span>▮▮▮</span><span class="batt">74</span></div>
-    </div>
-    <div class="topbar">
-      <div></div>
-      <div class="title-pick">导入
-        <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
-      </div>
-      <div class="more">…</div>
-    </div>
-    <div class="content">
-      <div class="inner">
-        <h1>书架</h1>
-        <div class="search">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          搜索
-        </div>
-        <div class="book-item">
-          <div class="mini m2"></div>
-          <div class="meta">
-            <div class="name">悉达多 <small>(赫尔曼·黑塞) (Z-Library)</small></div>
-            <div class="stars" data-stars></div>
-            <div class="sub"><span>186.3 KB</span><span>2026-04-19 21:57</span></div>
-          </div>
-          <div class="right">阅读至 4.5%</div>
-        </div>
-      </div>
-    </div>
-  </section>
-</div>
+  </div>
+</section>
 
 <nav class="dock">
   <button class="tab active" title="书架">🌴</button>
@@ -257,17 +192,6 @@
       document.querySelector('.dock .active')?.classList.remove('active');
       t.classList.add('active');
     });
-  });
-
-  const pager=document.getElementById('pager');
-  let t;
-  pager.addEventListener('scroll',()=>{
-    clearTimeout(t);
-    t=setTimeout(()=>{
-      const w=window.innerWidth;
-      const i=Math.round(pager.scrollLeft/w);
-      pager.scrollTo({left:i*w,behavior:'smooth'});
-    },120);
   });
 </script>
 </body>
